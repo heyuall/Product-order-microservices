@@ -1,2 +1,6 @@
-package com.houssem.microservices.orderservice.dto;public record OrderRequest() {
+package com.houssem.microservices.orderservice.dto;
+
+import java.math.BigDecimal;
+
+public record OrderRequest(Long id, String skuCode, BigDecimal price, Integer quantity) {
 }
