@@ -1,5 +1,6 @@
 package com.houssem.microservices.orderservice.service.impl;
 
+import com.houssem.microservices.orderservice.client.InventoryClient;
 import com.houssem.microservices.orderservice.dto.OrderRequest;
 import com.houssem.microservices.orderservice.entity.Order;
 import com.houssem.microservices.orderservice.repository.IOrderRepository;
@@ -16,11 +17,17 @@ import java.util.UUID;
 public class OrderService implements IOrderService {
 
     private final IOrderRepository orderRepository;
+    private final InventoryClient inventoryClient;
 
     @Override
     public void placeOrder(OrderRequest orderRequest) {
-        var order = mapToOrder(orderRequest);
-        orderRepository.save(order);
+        boolean inStock = inventoryClient.isInStock(orderRequest.skuCode(), orderRequest.quantity());
+        if (inStock) {
+            var order = mapToOrder(orderRequest);
+            orderRepository.save(order);
+        } else {
+            throw new RuntimeException("Product with Skucode " + orderRequest.skuCode() + "is not in stock");
+        }
     }
 
     private static Order mapToOrder(OrderRequest orderRequest) {
