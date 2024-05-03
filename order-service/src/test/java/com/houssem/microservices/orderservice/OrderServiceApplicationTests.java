@@ -1,5 +1,6 @@
 package com.houssem.microservices.orderservice;
 
+import com.houssem.microservices.orderservice.stub.InventoryStubs;
 import io.restassured.RestAssured;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,7 +42,7 @@ class OrderServiceApplicationTests {
                 }
                 """;
 
-
+        InventoryStubs.stubInventoryCall("iphone_15", 1);
         var responseBodyString = RestAssured.given()
                 .contentType("application/json")
                 .body(submitOrderJson)
